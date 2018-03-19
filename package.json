@@ -10,6 +10,7 @@
     "got": "^8.3.0",
     "js-yaml": "^3.11.0",
     "magic-string": "^0.23.2",
+    "rehype": "^5.0.1",
     "remark": "^9.0.0",
     "remark-frontmatter": "^1.2.0",
     "sharp": "^0.20.1",
