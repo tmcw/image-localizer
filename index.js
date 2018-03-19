@@ -56,7 +56,7 @@ async function localizeFile(filename) {
       remark.stringify(yamlNode)
     );
   }
-  const flickrImages = images.filter(img => img.url.match(/staticflickr/));
+  const flickrImages = images.filter(img => img.url.match(/static\.?flickr/));
   for (let image of flickrImages) {
     try {
       s.overwrite(
