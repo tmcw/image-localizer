@@ -19,7 +19,7 @@ async function localizeImage(image, base, i) {
     .resize(640 * 2, null, { withoutEnlargement: true })
     .toBuffer();
   let originalFiletype = extname(image.url);
-  let imageSlug = image.alt ? slugg(image.alt) : i;
+  let imageSlug = image.alt ? slugg(image.alt) : hasha(resized);
   let path = `${imageDir}/${base}-${imageSlug}${originalFiletype}`;
   fs.writeFileSync(path, resized);
   image.url = `/${path}`;
@@ -71,7 +71,12 @@ async function localizeFile(filename) {
     try {
       const ast = rehype.parse(imageTag.value);
       const src = ast.children[0].properties.src;
-      if (src.includes(" ")) continue;
+      if (
+        src.includes(" ") ||
+        ast.children.length > 1 ||
+        !src.match(/static\.?flickr/)
+      )
+        continue;
       s.overwrite(
         imageTag.position.start.offset,
         imageTag.position.end.offset,

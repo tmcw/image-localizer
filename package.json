@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "got": "^8.3.0",
+    "hasha": "^3.0.0",
     "js-yaml": "^3.11.0",
     "magic-string": "^0.23.2",
     "rehype": "^5.0.1",
