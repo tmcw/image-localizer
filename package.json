@@ -1,0 +1,22 @@
+{
+  "name": "image-localizer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "image-localizer": "index.js"
+  },
+  "dependencies": {
+    "got": "^8.3.0",
+    "js-yaml": "^3.11.0",
+    "magic-string": "^0.23.2",
+    "remark": "^9.0.0",
+    "remark-frontmatter": "^1.2.0",
+    "sharp": "^0.20.1",
+    "slugg": "^1.2.1",
+    "unist-util-select": "^1.5.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.11.1"
+  }
+}
