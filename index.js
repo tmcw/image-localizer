@@ -12,6 +12,7 @@ const { extname, basename } = require("path");
 const yaml = require("js-yaml");
 
 let imageDir = "images";
+let booksDir = "images/book-covers";
 
 async function localizeImage(image, base, i) {
   const content = await got(image.url, { encoding: null });
@@ -24,6 +25,24 @@ async function localizeImage(image, base, i) {
   fs.writeFileSync(path, resized);
   image.url = `/${path}`;
   return image;
+}
+
+async function loadBookCover(isbn) {
+  const {body: {
+    items:[
+      {
+      volumeInfo:{
+        imageLinks:{
+          thumbnail
+        }
+      }
+    }
+    ]
+  }} = await got(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`, { json: true });
+  const {body:content} = await got(thumbnail, { encoding: null });
+  const path = `${booksDir}/${isbn}.jpg`;
+  fs.writeFileSync(path, content);
+  return `/${path}`;
 }
 
 async function localizeFile(filename) {
@@ -47,8 +66,10 @@ async function localizeFile(filename) {
   let i = 0;
   let hasFlickrThumbnail =
     parsedYaml.image && parsedYaml.image.match(/static\.?flickr/);
+  if (parsedYaml.isbn && !parsedYaml.image) {
+    parsedYaml.image = await loadBookCover(parsedYaml.isbn);
+  }
   if (hasFlickrThumbnail) {
-    console.log(parsedYaml.image);
     parsedYaml.image = (await localizeImage(
       {
         url: parsedYaml.image,
@@ -57,6 +78,8 @@ async function localizeFile(filename) {
       base,
       i++
     )).url;
+  }
+  if (hasFlickrThumbnail || parsedYaml.isbn) {
     yamlNode.value = yaml.safeDump(parsedYaml);
     s.overwrite(
       yamlNode.position.start.offset,
